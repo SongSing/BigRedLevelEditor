@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="css/editor.css"></link>
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/canvas.js"></script>
+		<script src="js/editor.js"></script>
+	</head>
+	<body>
+		<div id="canvasContainer">
+			<canvas id="canvas" width=1024 height=576></canvas>
+		</div>
+		<div id="floaty">
+			<div id="edit"><div id="addButtons"><button id="addPlayer">Add Player</button><button id="addGoal">Add Goal</button><br /><button id="addEnemy">Add Enemy</button><button id="addWall">Add Wall</button></div><div id="editBounds"><div>X: <input type="number" min="0" step="32" value="0" id="x" /></div><div>Y: <input type="number" autocomplete="off" min="0" step="32" value="0" id="y" /></div><div>Width: <input type="number" autocomplete="off" min="0" step="32" value="32" id="width" /></div><div>Height: <input type="number" autocomplete="off" min="0" step="32" value="32" id="height" /></div></div><div id="editPlayer"><div>Speed: <input type="number" autocomplete="off" min="0" step="0.1" value="0" id="speed" /></div></div><div id="editEnemy"><div>X Velocity: <input type="number" autocomplete="off" step="0.1" value="0" id="xVelocity" /></div><div>Y Velocity: <input type="number" autocomplete="off" step="0.1" value="0" id="yVelocity" /></div></div></div>
+
+			<div id="settings"><div>Level width: <input type="number" autocomplete="off" min="0" step="32" value="1024" id="levelWidth" /></div><div>Level height: <input type="number" autocomplete="off" min="0" step="32" value="576" id="levelHeight" /></div><div>Snap: <input type="number" autocomplete="off" min="0" step="4" value="32" id="snap" /></div></div>
+
+			<button id="export">Export</button><button id="import">Import</button>
+
+			<textarea autocomplete="off" id="exportText"></textarea>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,129 @@
+*
+{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#canvas
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	background:red;
+}
+
+#canvasContainer
+{
+	position:absolute;
+	left:232;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	overflow:auto;
+	background:#444444;
+}
+
+#floaty
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	width:232px;
+	background:#EEEEEE;
+	overflow:auto;
+}
+
+#edit, #settings
+{
+	box-sizing:border-box;
+	position:absolute;
+	left:8px;
+	top:8px;
+	border:1px solid black;
+	padding:8px;
+	width:216px;
+	overflow:auto;
+}
+
+input[type='number']
+{
+	width:96px;
+}
+
+#edit
+{
+	top:120px;
+}
+
+#edit > div > div, #settings > div
+{
+	margin:4px 0px;
+	text-align:right;
+}
+
+#addButtons > button
+{
+	width:50%;
+}
+
+#addPlayer
+{
+	background:#00FF00;
+}
+
+#addEnemy
+{
+	background:#FF0000;
+	color:white;
+}
+
+#addWall
+{
+	background:black;
+	color:white;
+}
+
+#addGoal
+{
+	background:#FFFF00;
+}
+
+#export, #import
+{
+	position:absolute;
+	top:360px;
+	left:8px;
+	width:calc(50% - 12px);
+	height:32px;
+}
+
+#import
+{
+	left:auto;
+	right:8px;
+}
+
+#exportText
+{
+	position:absolute;
+	top:400px;
+	left:8px;
+	width:calc(100% - 16px);
+	height:calc(100% - 408px);
+	resize:none;
+}
+
+textarea, input
+{
+	-webkit-touch-callout: text;
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
