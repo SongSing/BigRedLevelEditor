@@ -88,6 +88,11 @@ input[type='number']
 	color:white;
 }
 
+#addPortal
+{
+	background:#00AAFF;
+}
+
 #addGoal
 {
 	background:#FFFF00;
@@ -96,7 +101,7 @@ input[type='number']
 #export, #import
 {
 	position:absolute;
-	top:360px;
+	top:440px;
 	left:8px;
 	width:calc(50% - 12px);
 	height:32px;
@@ -111,10 +116,10 @@ input[type='number']
 #exportText
 {
 	position:absolute;
-	top:400px;
+	top:476px;
 	left:8px;
 	width:calc(100% - 16px);
-	height:calc(100% - 408px);
+	height:calc(100% - 484px);
 	resize:none;
 }
 

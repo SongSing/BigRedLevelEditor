@@ -11,9 +11,46 @@ function update()
 {
 	canvas.fill("#AAAAAA");
 
+	var ps = [];
+
 	for (var i = 0; i < entities.length; i++)
 	{
-		entities[i].draw();
+		var e = entities[i];
+		e.draw();
+
+		if (e.type === "portal")
+		{
+			ps.push(e);
+		}
+	}
+
+	for (var i = 0; i < ps.length; i++)
+	{
+		var p = ps[i];
+
+		if (p.id !== p.link)
+		{
+			var op;
+
+			for (var j = 0; j < ps.length; j++)
+			{
+				if (ps[j].id === p.link)
+				{
+					op = ps[j];
+					break;
+				}
+			}
+
+			if (op !== undefined)
+			{
+				var s = 16;
+				var c = "rgba(0, 0, 255, 0.5)";
+
+				canvas.drawLine(p.x + p.width / 2, p.y + p.height / 2, op.x + op.width / 2, op.y + op.height / 2, c, 3);
+				canvas.fillCircleInSquare(p.x + p.width / 2 - s / 2, p.y + p.height / 2 - s / 2, s, c);
+				canvas.fillRect(op.x + op.width / 2 - s / 2, op.y + op.height / 2 - s / 2, s, s, c);
+			}
+		}
 	}
 }
 
@@ -24,7 +61,7 @@ function playerDraw()
 
 function wallDraw()
 {
-	canvas.fillRect(this.x, this.y, this.width, this.height, "#000000");
+	canvas.fillRect(this.x, this.y, this.width, this.height, this.invisible ? "rgba(0,0,0,0.5)" : "#000000");
 }
 
 function enemyDraw()
@@ -35,6 +72,15 @@ function enemyDraw()
 function goalDraw()
 {
 	canvas.fillRect(this.x, this.y, this.width, this.height, "#FFFF00");
+}
+
+function portalDraw()
+{
+	var color = (this.playerUsable ? (this.enemyUsable ? "#FFAAFF" : "#00AAFF") : (this.enemyUsable ? "#FFAAAA" : "#FFFFFF"));
+	canvas.fillRect(this.x, this.y, this.width, this.height, color);
+	canvas.setFontSize("24px");
+	canvas.setTextBaseline("middle");
+	canvas.fillText(this.id, this.x + this.width / 2, this.y + this.height / 2, "black", undefined, "center");
 }
 
 function addPlayer()
@@ -60,6 +106,7 @@ function addWall()
 	wall.width = 32;
 	wall.height = 32;
 	wall.type = "wall";
+	wall.invisible = false;
 
 	wall.draw = wallDraw;
 
@@ -74,7 +121,7 @@ function addEnemy()
 	enemy.width = 32;
 	enemy.height = 32;
 	enemy.type = "enemy";
-	enemy.xVelocity = 0.2;
+	enemy.xVelocity = 0;
 	enemy.yVelocity = 0;
 
 	enemy.draw = enemyDraw;
@@ -94,6 +141,55 @@ function addGoal()
 	goal.draw = goalDraw;
 
 	entities.push(goal);
+}
+
+function addPortal()
+{
+	var portal = {};
+	portal.x = 0;
+	portal.y = 0;
+	portal.width = 32;
+	portal.height = 32;
+
+	var id = 0;
+	var ids = [];
+
+	for (var i = 0; i < entities.length; i++)
+	{
+		var e = entities[i];
+
+		if (e.type === "portal")
+		{
+			ids.push(e.id);
+		}
+	}
+
+	ids.sort(function(a, b)
+	{
+		return a - b;
+	});
+
+	console.log(ids);
+
+	for (var i = 0; i <= ids[ids.length - 1] + 1; i++)
+	{
+		console.log(i);
+		if (ids.indexOf(i) === -1)
+		{
+			id = i;
+			break;
+		}
+	}
+
+	portal.id = id;
+	portal.link = 0;
+	portal.type = "portal";
+	portal.enemyUsable = false;
+	portal.playerUsable = true;
+
+	portal.draw = portalDraw;
+
+	entities.push(portal);
 }
 
 function pointInRect(x, y, rx, ry, rw, rh)
@@ -131,6 +227,16 @@ function setCurrentEntity(i)
 		$("#editPlayer").hide();
 	}
 
+	if (currentEntity.type === "wall")
+	{
+		$("#editWall").show();
+		$("#invisible").prop("checked", currentEntity.invisible);
+	}
+	else
+	{
+		$("#editWall").hide();
+	}
+
 	if (currentEntity.type === "enemy")
 	{
 		$("#editEnemy").show();
@@ -140,6 +246,19 @@ function setCurrentEntity(i)
 	else
 	{
 		$("#editEnemy").hide();
+	}
+
+	if (currentEntity.type === "portal")
+	{
+		$("#editPortal").show();
+		$("#portalId").val(currentEntity.id);
+		$("#portalLink").val(currentEntity.link);
+		$("#playerUsable").prop("checked", currentEntity.playerUsable);
+		$("#enemyUsable").prop("checked", currentEntity.enemyUsable);
+	}
+	else
+	{
+		$("#editPortal").hide();
 	}
 }
 
@@ -185,6 +304,12 @@ $(function()
 		setCurrentEntity(entities.length - 1);
 	});
 
+	$("#addPortal").click(function()
+	{
+		addPortal();
+		setCurrentEntity(entities.length - 1);
+	});
+
 	$("#canvas").mousedown(function(e)
 	{
 		var x = xFromE(e);
@@ -224,8 +349,9 @@ $(function()
 		}
 		else if (e.button === 2) // right click
 		{
-			for (var i = 0; i < entities.length; i++)
+			for (var i = entities.length - 1; i >= 0; --i)
 			{
+				console.log(i);
 				var en = entities[i];
 				if (pointInRect(x, y, en.x, en.y, en.width, en.height))
 				{
@@ -296,6 +422,31 @@ $(function()
 	$("#speed").change(function()
 	{
 		currentEntity.speed = parseFloat($("#speed").val());
+	});
+
+	$("#portalId").change(function()
+	{
+		currentEntity.id = parseInt($("#portalId").val());
+	});
+
+	$("#portalLink").change(function()
+	{
+		currentEntity.link = parseInt($("#portalLink").val());
+	});
+
+	$("#playerUsable").change(function()
+	{
+		currentEntity.playerUsable = $("#playerUsable").is(":checked");
+	});
+
+	$("#enemyUsable").change(function()
+	{
+		currentEntity.enemyUsable = $("#enemyUsable").is(":checked");
+	});
+
+	$("#invisible").change(function()
+	{
+		currentEntity.invisible = $("#invisible").is(":checked");
 	});
 
 	$("#snap").change(function(e)
